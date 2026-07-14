@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import { ProjectConfig, EnvironmentConfig, RBACConfig } from '../types/config';
+import { ProjectConfig, EnvironmentConfig, RBACConfig } from '../types/config.js';
 
 dotenv.config();
 

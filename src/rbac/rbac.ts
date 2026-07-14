@@ -1,5 +1,5 @@
-import { RBACConfig } from '../types/config';
-import { loadRBACConfig } from '../config/loader';
+import { RBACConfig } from '../types/config.js';
+import { loadRBACConfig } from '../config/loader.js';
 
 export class RBAC {
   private config: RBACConfig;
