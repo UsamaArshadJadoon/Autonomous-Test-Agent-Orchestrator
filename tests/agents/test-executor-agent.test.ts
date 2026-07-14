@@ -1,7 +1,6 @@
 import { TestExecutorAgent, TestCase, TestStep } from '../../src/agents/test-executor-agent.js';
 import { Logger } from '../../src/logging/logger.js';
 import fs from 'fs';
-import path from 'path';
 
 // Mock Playwright
 jest.mock('playwright', () => {
@@ -85,6 +84,7 @@ describe('TestExecutorAgent', () => {
     it('should create screenshots directory if not exists', async () => {
       (fs.existsSync as jest.Mock).mockReturnValue(false);
       const newAgent = new TestExecutorAgent(mockLogger);
+      expect(newAgent).toBeDefined();
 
       expect(fs.mkdirSync).toHaveBeenCalledWith(
         expect.stringContaining('screenshots'),
@@ -505,11 +505,9 @@ describe('TestExecutorAgent', () => {
       const mockContext = await mockBrowser.newContext();
       const mockPage = await mockContext.newPage();
 
-      let consoleCallback: any;
-      (mockPage.on as jest.Mock).mockImplementation((event, callback) => {
-        if (event === 'console') {
-          consoleCallback = callback;
-        }
+      (mockPage.on as jest.Mock).mockImplementation((event) => {
+        // Verify that event listener is set up
+        expect(['console', 'pageerror']).toContain(event);
       });
 
       const testCases: TestCase[] = [
@@ -522,12 +520,14 @@ describe('TestExecutorAgent', () => {
         },
       ];
 
-      const result = await agent.executeTests(testCases, 'http://localhost:3000', 'development');
+      await agent.executeTests(testCases, 'http://localhost:3000', 'development');
 
       expect(mockPage.on).toHaveBeenCalled();
     });
 
     it('should set and use custom screenshots directory', async () => {
+      (fs.existsSync as jest.Mock).mockReturnValue(false);
+      (fs.mkdirSync as jest.Mock).mockClear();
       const customDir = './custom-screenshots';
       agent.setScreenshotsDirectory(customDir);
 
