@@ -1,4 +1,11 @@
 import winston from 'winston';
+import fs from 'fs';
+import path from 'path';
+
+const logsDir = './logs';
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
 
 export interface Logger {
   info(message: string, meta?: any): void;
@@ -12,19 +19,30 @@ class WinstonLogger implements Logger {
 
   constructor(name: string) {
     this.logger = winston.createLogger({
-      defaultMeta: { service: name },
+      level: process.env.LOG_LEVEL || 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),
-        winston.format.splat(),
-        winston.format.json()
+        winston.format.printf(({ level, message, timestamp, ...meta }) => {
+          return `${timestamp} [${name}] ${level.toUpperCase()}: ${message} ${
+            Object.keys(meta).length > 0 ? JSON.stringify(meta) : ''
+          }`;
+        })
       ),
+      defaultMeta: { label: name },
       transports: [
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.simple()
           )
+        }),
+        new winston.transports.File({
+          filename: path.join(logsDir, 'error.log'),
+          level: 'error'
+        }),
+        new winston.transports.File({
+          filename: path.join(logsDir, 'combined.log')
         })
       ]
     });
