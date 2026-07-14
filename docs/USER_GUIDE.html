@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATAO - Autonomous Test Agent Orchestrator User Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        nav h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        nav a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block code {
+            color: inherit;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .warning {
+            color: #f39c12;
+        }
+
+        .info {
+            color: #3498db;
+        }
+
+        .step-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .step-box h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+            margin: 20px 0;
+            white-space: pre;
+            color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        table tr:hover {
+            background: #e8eef7;
+        }
+
+        .command-example {
+            background: #282c34;
+            color: #61dafb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #61dafb;
+            font-family: monospace;
+        }
+
+        .output-example {
+            background: #f0f0f0;
+            color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #999;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .workflow-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .workflow-card h4 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #0c5460;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #856404;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #155724;
+            color: #155724;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            margin-left: 30px;
+            border-left: 3px solid #667eea;
+            position: relative;
+        }
+
+        .timeline-item:before {
+            content: "";
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .timeline-item h4 {
+            margin-top: 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .json-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+            text-decoration: underline dotted;
+        }
+
+        .tooltip:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 10;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            nav ul {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .diagram {
+                font-size: 0.8em;
+            }
+        }
+
+        .highlight {
+            background: #fff9e6;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Autonomous Test Agent Orchestrator</h1>
+            <p>Complete Step-by-Step Guide to Automated Testing with AI Agents</p>
+        </header>
+
+        <nav>
+            <h3>📖 Quick Navigation</h3>
+            <ul>
+                <li><a href="#quick-start">Quick Start</a></li>
+                <li><a href="#overview">System Overview</a></li>
+                <li><a href="#workflow">Workflow Steps</a></li>
+                <li><a href="#example">Real Example</a></li>
+                <li><a href="#output">Understanding Output</a></li>
+                <li><a href="#commands">Common Commands</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+                <li><a href="#advanced">Advanced Usage</a></li>
+            </ul>
+        </nav>
+
+        <!-- Quick Start Section -->
+        <section id="quick-start">
+            <h2>⚡ Quick Start (5 minutes)</h2>
+
+            <h3>Step 1: Installation</h3>
+            <div class="code-block">
+cd test-agent-orchestrator
+npm install
+            </div>
+
+            <h3>Step 2: Configure Credentials</h3>
+            <div class="code-block">
+cp .env.example .env
+# Edit .env with your Jira token, database URL, API keys
+            </div>
+
+            <h3>Step 3: Setup Database</h3>
+            <div class="code-block">
+psql -U postgres -f db/schema.sql
+            </div>
+
+            <h3>Step 4: Build Project</h3>
+            <div class="code-block">
+npm run build
+            </div>
+
+            <h3>Step 5: Run Your First Test</h3>
+            <div class="code-block">
+test-agent run SEK-1934 --env qa --mode full
+            </div>
+
+            <div class="alert alert-success">
+                <strong>✓ That's it!</strong> The system will automatically:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Fetch your story from Jira</li>
+                    <li>Generate comprehensive test cases</li>
+                    <li>Execute tests in your QA environment</li>
+                    <li>Log bugs back to Jira</li>
+                    <li>Send results to Slack/CI</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- System Overview Section -->
+        <section id="overview">
+            <h2>🏗️ System Overview</h2>
+
+            <p>ATAO is a <strong>7-agent orchestration system</strong> that automates the entire testing workflow. Here's how it works:</p>
+
+            <div class="diagram">┌─────────────────────────────────────────────────────────────┐
+│  Your Command: test-agent run SEK-1934 --env qa --mode full  │
+└────────────────┬────────────────────────────────────────────┘
+                 │
+         ┌───────┴───────┐
+         │   7 Agents    │
+         └───────┬───────┘
+                 │
+    ┌────────────┴─────────────┐
+    │                          │
+┌───▼──┐  ┌──────┐  ┌──────┐  │
+│Story │→ │Test  │→ │Gap   │→ │
+│Agent │  │Writer│  │Check │→ │
+└──────┘  └──────┘  └──────┘  │
+                               │
+                          ┌────▼────┐
+                          │Executor  │
+                          └────┬────┘
+                               │
+                    ┌──────────┤
+                    │          │
+                ┌───▼───┐  ┌───▼──┐
+                │Review │→ │Approve
+                └───┬───┘  └────┬─
+                    │          │
+                ┌───▼──────────▼──┐
+                │   Bug Logger    │
+                │   + Webhooks    │
+                └─────────────────┘</div>
+
+            <h3>The 7 Agents</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th>Role</th>
+                        <th>Input</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Story Agent</strong></td>
+                        <td>Reads from Jira</td>
+                        <td>Story key (SEK-1934)</td>
+                        <td>Story details + AC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Writer</strong></td>
+                        <td>Generates tests</td>
+                        <td>Story details</td>
+                        <td>45-60 test cases</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gap Analyzer</strong></td>
+                        <td>Validates coverage</td>
+                        <td>Tests + AC</td>
+                        <td>Coverage report</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Executor</strong></td>
+                        <td>Runs tests (Playwright)</td>
+                        <td>Test cases</td>
+                        <td>Pass/fail + screenshots</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reviewer</strong></td>
+                        <td>QA review gate</td>
+                        <td>Results</td>
+                        <td>Approval/rejection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bug Logger</strong></td>
+                        <td>Creates Jira issues</td>
+                        <td>Failed tests</td>
+                        <td>Linked bug tickets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orchestrator</strong></td>
+                        <td>Coordinates all</td>
+                        <td>Initial request</td>
+                        <td>Final report</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Step-by-Step Workflow -->
+        <section id="workflow">
+            <h2>📋 Step-by-Step Workflow</h2>
+
+            <h3>What Happens When You Run: <code>test-agent run SEK-1934 --env qa --mode full</code></h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>1️⃣ Story Agent Fetches from Jira</h4>
+                    <p>Your story (SEK-1934) is retrieved from Jira with all details:</p>
+                    <div class="output-example">✓ Story loaded: "User Registration with Email Verification"
+✓ AC parsed: 8 acceptance criteria
+✓ Test data templates found
+✓ Previous baseline: 45 tests from last run</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>2️⃣ Test Writer Generates Test Cases</h4>
+                    <p>AI generates comprehensive tests covering each acceptance criterion:</p>
+                    <div class="output-example">✓ Generated 52 test cases
+  • 12 happy path tests
+  • 15 edge case tests
+  • 12 error handling tests
+  • 8 regression tests (baseline)</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>3️⃣ Gap Analyzer Validates Coverage</h4>
+                    <p>Ensures all acceptance criteria are covered:</p>
+                    <div class="output-example">✓ AC 1 (Registration Form): 2 tests
+✓ AC 2 (Email Validation): 3 tests
+✓ AC 3 (Password Validation): 4 tests
+✓ AC 4-8: Covered ✓
+
+Coverage: 24/24 AC covered ✓
+No gaps detected.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>4️⃣ Test Executor Runs in Playwright</h4>
+                    <p>Tests execute in a real browser against your QA environment:</p>
+                    <div class="output-example">Starting test execution...
+Environment: qa (https://qa.app.company.com)
+Browser: Chromium
+Concurrent: 2
+
+Test 1/52: Happy Path ✓ PASS (3.2s)
+Test 2/52: Email Verification ✓ PASS (4.1s)
+Test 3/52: Invalid Email Error ✗ FAIL (3.5s)
+  └─ Expected error message, got page redirect
+  └─ Screenshot saved: test_003_fail.png
+
+Test 4/52-52: ... [continuing]
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+Results: 50/52 PASSED
+Duration: 4m 32s
+━━━━━━━━━━━━━━━━━━━━━━━━</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>5️⃣ Reviewer Analyzes Results</h4>
+                    <p>AI reviews results against acceptance criteria:</p>
+                    <div class="output-example">✓ 50/52 tests passed
+⚠️ 2 failures detected:
+  • Test 3: Email validation error message missing
+  • Test 15: Password strength check not working
+
+Recommendation: HOLD for fixes</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>6️⃣ Approval Workflow</h4>
+                    <p>QA lead receives email for approval:</p>
+                    <div class="output-example">⏳ Awaiting approval from: qa-lead@company.com
+⏱️ Auto-approve in: 23 hours 45 minutes
+
+[Email sent with results link]
+
+✓ APPROVED after 32 minutes
+Approved by: john@company.com</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>7️⃣ Bug Logger Creates Jira Issues</h4>
+                    <p>Failed tests are logged as bugs linked to the original story:</p>
+                    <div class="output-example">✓ Bug SEK-1935 created
+  Title: "Email validation error message missing"
+  Linked to: SEK-1934
+  Status: Open
+
+✓ Bug SEK-1936 created
+  Title: "Password strength check not enforced"
+  Linked to: SEK-1934
+  Status: Open</div>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>8️⃣ Webhooks & Notifications</h4>
+                    <p>Results sent to Slack, CI/CD, and dashboard:</p>
+                    <div class="output-example">✓ Slack notification sent
+  Channel: #qa-testing
+  Message: "SEK-1934 tested: 50/52 passed. 2 bugs created."
+
+✓ CI/CD webhook sent to build system
+✓ Dashboard updated with execution record</div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>⏱️ Total Time:</strong> About 5 minutes from command to bug creation. The system runs unattended!
+            </div>
+        </section>
+
+        <!-- Real Example Section -->
+        <section id="example">
+            <h2>📖 Real Example: SEK-1934</h2>
+
+            <h3>Your Story</h3>
+            <div class="step-box">
+                <h4>SEK-1934: User Registration with Email Verification</h4>
+                <p><strong>Description:</strong> As a new user, I want to register an account with email verification so my account is secure and authentic.</p>
+                <p><strong>Acceptance Criteria:</strong></p>
+                <ol>
+                    <li>User can enter email and password on registration form</li>
+                    <li>System validates email format</li>
+                    <li>System validates password (min 8 chars, 1 upper, 1 number, 1 special)</li>
+                    <li>System sends verification email</li>
+                    <li>User clicks verification link</li>
+                    <li>Account is activated</li>
+                    <li>User can log in with registered credentials</li>
+                    <li>Error messages display for invalid inputs</li>
+                </ol>
+            </div>
+
+            <h3>Run the Command</h3>
+            <div class="command-example">$ test-agent run SEK-1934 --env qa --mode full</div>
+
+            <h3>Expected Output Timeline</h3>
+            <div class="output-example">[00:00] Execution ID: exec_20260714_abc123def456
+[00:02] 📖 Story Agent: Fetching SEK-1934...
+[00:05] ✓ Story loaded (8 AC)
+[00:06] 📝 Test Writer: Generating test cases...
+[00:15] ✓ Generated 52 test cases
+[00:16] 🔍 Gap Analyzer: Checking coverage...
+[00:18] ✓ All AC covered
+[00:19] 🎭 Test Executor: Starting tests...
+[04:32] ✓ 50/52 tests passed
+[04:45] 👀 Reviewer: Analyzing results...
+[05:00] ⚠️ 2 issues detected
+[05:01] ⏳ Approval workflow: Waiting...
+[05:35] ✓ Approved
+[05:36] 🐛 Bug Logger: Creating issues...
+[05:42] ✓ Created SEK-1935, SEK-1936
+[05:43] ✓ Complete!</div>
+
+            <h3>View Results</h3>
+            <div class="step-box">
+                <h4>Dashboard</h4>
+                <p><code>https://qa-dash.company.com/exec/exec_20260714_abc123def456</code></p>
+                <p>Shows: Test results, screenshots, videos, logs, created bugs</p>
+            </div>
+
+            <div class="step-box">
+                <h4>Terminal</h4>
+                <div class="command-example">$ test-agent view exec_20260714_abc123def456
+$ test-agent bugs SEK-1934</div>
+            </div>
+        </section>
+
+        <!-- Understanding Output -->
+        <section id="output">
+            <h2>📊 Understanding the Output</h2>
+
+            <h3>Execution Report (JSON)</h3>
+            <div class="json-box">{
+  "execution_id": "exec_20260714_abc123def456",
+  "story_key": "SEK-1934",
+  "status": "COMPLETED_WITH_ISSUES",
+  "environment": "qa",
+  "test_results": {
+    "total": 52,
+    "passed": 50,
+    "failed": 2,
+    "duration_seconds": 272,
+    "coverage_percent": 98
+  },
+  "failed_tests": [
+    {
+      "id": 3,
+      "name": "Test invalid email error",
+      "expected": "Error message displayed",
+      "actual": "Page redirected",
+      "screenshot": "artifacts/test_003_fail.png"
+    }
+  ],
+  "bugs_created": ["SEK-1935", "SEK-1936"],
+  "approval": {
+    "status": "APPROVED",
+    "approved_by": "john@company.com"
+  }
+}</div>
+
+            <h3>Status Legend</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Meaning</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="success">✓ PASSED</span></td>
+                        <td>Test passed, assertion verified</td>
+                        <td>None needed</td>
+                    </tr>
+                    <tr>
+                        <td><span class="error">✗ FAILED</span></td>
+                        <td>Test failed, bug created</td>
+                        <td>Review screenshot/log</td>
+                    </tr>
+                    <tr>
+                        <td><span class="warning">⚠️ FLAKY</span></td>
+                        <td>Test passed but intermittent</td>
+                        <td>Added to flaky registry</td>
+                    </tr>
+                    <tr>
+                        <td><span class="info">⏳ PENDING</span></td>
+                        <td>Waiting for approval</td>
+                        <td>QA lead will review</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Artifacts Folder</h3>
+            <div class="code-block">
+artifacts/
+├── test_003_fail.png           # Screenshot of failure
+├── test_003.webm               # Video of test
+├── test_003.log                # Detailed logs
+├── execution_report.json       # Full report
+└── baseline_comparison.json    # Regression analysis
+            </div>
+        </section>
+
+        <!-- Common Commands -->
+        <section id="commands">
+            <h2>⌨️ Common Commands</h2>
+
+            <h3>Run Tests</h3>
+            <div class="code-block">
+# Full test suite
+test-agent run SEK-1934 --env qa --mode full
+
+# Quick smoke test
+test-agent run SEK-1934 --env qa --mode smoke
+
+# Full + baseline (regression)
+test-agent run SEK-1934 --env qa --mode regression
+
+# Different environment
+test-agent run SEK-1934 --env staging --mode full
+            </div>
+
+            <h3>View Results</h3>
+            <div class="code-block">
+# View specific execution
+test-agent view exec_20260714_abc123
+
+# List recent executions for a story
+test-agent list SEK-1934
+
+# Compare two executions
+test-agent compare exec_20260714_abc123 exec_20260713_xyz789
+
+# View created bugs
+test-agent bugs SEK-1934
+            </div>
+
+            <h3>Manage Approvals</h3>
+            <div class="code-block">
+# View pending approvals
+test-agent pending-approvals
+
+# Approve an execution
+test-agent approve exec_20260714_abc123
+
+# Reject with comment
+test-agent reject exec_20260714_abc123 --comment "Need to fix password validation"
+            </div>
+
+            <h3>Team Management</h3>
+            <div class="code-block">
+# View your role and permissions
+test-agent whoami
+
+# List team members
+test-agent team list
+
+# Add team member
+test-agent team add jane@company.com --role qa_tester
+
+# View permissions matrix
+test-agent permissions
+            </div>
+
+            <h3>Webhooks</h3>
+            <div class="code-block">
+# Add Slack webhook
+test-agent webhook add slack \
+  --url https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
+  --channel #qa-testing
+
+# Add CI/CD webhook
+test-agent webhook add ci \
+  --url https://ci.company.com/webhooks/tests
+
+# List webhooks
+test-agent webhook list
+            </div>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section id="troubleshooting">
+            <h2>🔧 Troubleshooting</h2>
+
+            <h3>Error: Story Not Found</h3>
+            <div class="step-box">
+                <h4>Problem</h4>
+                <div class="output-example"><span class="error">Error: STORY_NOT_FOUND</span>
+Story SEK-1934 not found in Jira</div>
+
+                <h4>Solutions</h4>
+                <ol>
+                    <li>Verify the story key is correct: <code>https://jira.company.com/browse/SEK-1934</code></li>
+                    <li>Check your Jira token in <code>.env</code> is valid</li>
+                    <li>Ensure you have permission to view the story</li>
+                    <li>Test connection: <code>curl -H "Authorization: Bearer $JIRA_TOKEN" https://jira.company.com/rest/api/3/issues/SEK-1934</code></li>
+                </ol>
+            </div>
+
+            <h3>Error: Database Connection Failed</h3>
+            <div class="step-box">
+                <h4>Problem</h4>
+                <div class="output-example"><span class="error">Error: DATABASE_UNREACHABLE</span>
+Database is unreachable. Check DATABASE_URL and credentials.</div>
+
+                <h4>Solutions</h4>
+                <ol>
+                    <li>Verify PostgreSQL is running: <code>psql -U postgres -c "SELECT 1"</code></li>
+                    <li>Check <code>.env</code> DATABASE_URL is correct</li>
+                    <li>Ensure schema is loaded: <code>psql -U postgres -f db/schema.sql -d app_qa</code></li>
+                    <li>Check credentials: <code>psql postgresql://user:pass@localhost:5432/app_qa</code></li>
+                </ol>
+            </div>
+
+            <h3>Error: App Unreachable</h3>
+            <div class="step-box">
+                <h4>Problem</h4>
+                <div class="output-example"><span class="error">Error: APP_UNREACHABLE</span>
+App is unreachable at https://qa.app.company.com</div>
+
+                <h4>Solutions</h4>
+                <ol>
+                    <li>Verify URL in <code>.env</code>: <code>cat .env | grep APP_URL</code></li>
+                    <li>Test connectivity: <code>curl https://qa.app.company.com -I</code></li>
+                    <li>Check firewall/VPN is connected</li>
+                    <li>Verify environment is up with your DevOps team</li>
+                </ol>
+            </div>
+
+            <h3>Tests Are Flaky/Intermittent</h3>
+            <div class="step-box">
+                <h4>Problem</h4>
+                <p>Tests pass sometimes, fail others. Status shows "FLAKY".</p>
+
+                <h4>Solutions</h4>
+                <ol>
+                    <li>Check app performance: <code>curl https://qa.app.company.com -w "Time: %{time_total}s"</code></li>
+                    <li>View flaky test registry: <code>test-agent flaky-registry SEK-1934</code></li>
+                    <li>Run in regression mode to track baseline: <code>test-agent run SEK-1934 --mode regression</code></li>
+                    <li>Check if app is under heavy load</li>
+                </ol>
+            </div>
+
+            <h3>API Rate Limit Exceeded</h3>
+            <div class="step-box">
+                <h4>Problem</h4>
+                <div class="output-example"><span class="warning">Warning: CLAUDE_API_RATE_LIMIT</span>
+Anthropic API rate limit exceeded. Waiting before retry...</div>
+
+                <h4>Solutions</h4>
+                <ol>
+                    <li>System automatically retries with exponential backoff - wait 30 minutes</li>
+                    <li>Check quota: <code>https://console.anthropic.com/account/billing</code></li>
+                    <li>Contact Anthropic support for higher limits</li>
+                    <li>Stagger test runs: Wait 30 min between different stories</li>
+                </ol>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Need Help?</strong> Contact qa-team@company.com or post in #qa-testing Slack channel
+            </div>
+        </section>
+
+        <!-- Advanced Usage -->
+        <section id="advanced">
+            <h2>🚀 Advanced Usage</h2>
+
+            <h3>Execution Modes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Duration</th>
+                        <th>Tests</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>smoke</strong></td>
+                        <td>~2 min</td>
+                        <td>10-15</td>
+                        <td>Quick validation of critical path</td>
+                    </tr>
+                    <tr>
+                        <td><strong>full</strong></td>
+                        <td>~5 min</td>
+                        <td>45-60</td>
+                        <td>Comprehensive testing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>regression</strong></td>
+                        <td>~8 min</td>
+                        <td>90-105</td>
+                        <td>Full + baseline detection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Replay Failed Tests</h3>
+            <div class="code-block">
+# Re-run only the tests that failed
+test-agent replay exec_20260714_abc123 --failed-only
+
+# Useful for debugging specific failures
+# If test still fails, add to regression suite
+test-agent replay exec_20260714_abc123 --failed-only --debug
+            </div>
+
+            <h3>Regression Detection</h3>
+            <div class="code-block">
+# Compare two executions to detect regressions
+test-agent compare exec_20260714_abc123 exec_20260713_xyz789
+
+# Output shows:
+# • Tests added/removed
+# • New failures
+# • Coverage changes
+# • Performance changes
+            </div>
+
+            <h3>Flaky Test Registry</h3>
+            <div class="code-block">
+# View tests marked as flaky
+test-agent flaky-registry SEK-1934
+
+# Shows:
+# • Flaky Test 1: "Email verification" (40% pass rate)
+# • Flaky Test 2: "Login after registration" (66% pass rate)
+# • Recommendation: Investigate timing issues
+            </div>
+
+            <h3>Team Permissions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Can Run Tests</th>
+                        <th>Can Approve</th>
+                        <th>Can Log Bugs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>qa_lead</strong></td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>qa_tester</strong></td>
+                        <td>✓</td>
+                        <td>✗</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>developer</strong></td>
+                        <td>✓</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Webhook Integration</h3>
+            <div class="code-block">
+# Configure Slack notifications
+test-agent webhook add slack \
+  --url https://hooks.slack.com/services/xxx \
+  --channel #qa-testing \
+  --mention @qa-lead
+
+# Configure CI/CD integration
+test-agent webhook add ci \
+  --url https://ci.company.com/webhooks/tests \
+  --auth-header "X-CI-Token: secret"
+
+# List all webhooks
+test-agent webhook list
+            </div>
+
+            <h3>Custom Test Data</h3>
+            <div class="code-block">
+# Create test data templates
+.testconfig/projects/PROJ/
+└── test-data-templates/
+    └── user-registration/
+        ├── valid_users.json
+        ├── invalid_emails.json
+        └── password_edge_cases.json
+
+# Tests will use these templates automatically
+            </div>
+
+            <h3>Execution History & Analytics</h3>
+            <div class="code-block">
+# View all executions for a story
+test-agent history SEK-1934
+
+# View execution analytics
+test-agent analytics SEK-1934
+# Shows: Trend graphs, average duration, success rate
+
+# Export execution report
+test-agent export exec_20260714_abc123 --format json
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section>
+            <h2>✨ Summary</h2>
+
+            <div class="workflow-grid">
+                <div class="workflow-card">
+                    <h4>1. Simple Command</h4>
+                    <p><code>test-agent run SEK-1934</code></p>
+                    <p>One line to test an entire story</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h4>2. Intelligent Agents</h4>
+                    <p>7 AI agents work together</p>
+                    <p>Story → Tests → Execute → Review → Log</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h4>3. Complete Artifacts</h4>
+                    <p>Screenshots, videos, logs</p>
+                    <p>Everything you need for debugging</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h4>4. Bug Tracking</h4>
+                    <p>Failures automatically logged to Jira</p>
+                    <p>Linked to original story</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h4>5. Team Approval</h4>
+                    <p>QA lead reviews before closing</p>
+                    <p>Email-based approval workflow</p>
+                </div>
+
+                <div class="workflow-card">
+                    <h4>6. Notifications</h4>
+                    <p>Slack, CI/CD, dashboards</p>
+                    <p>Keep everyone informed</p>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>🎉 You're ready!</strong>
+                <p>Follow the Quick Start section above to run your first test. For detailed information, see the full User Guide in <code>docs/USER_GUIDE.md</code></p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Autonomous Test Agent Orchestrator (ATAO) | Complete User Guide</p>
+            <p>Version 1.0.0 | © 2026 Your Company</p>
+            <p><small>For support: qa-team@company.com | Slack: #qa-testing</small></p>
+        </footer>
+    </div>
+</body>
+</html>
