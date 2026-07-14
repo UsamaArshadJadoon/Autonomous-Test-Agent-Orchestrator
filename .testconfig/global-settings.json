@@ -1,0 +1,24 @@
+{
+  "log_level": "info",
+  "claude_models": {
+    "default": "claude-opus-4-8",
+    "agents": {
+      "story_agent": "claude-haiku-4-5-20251001",
+      "test_writer_agent": "claude-opus-4-8",
+      "gap_analyzer_agent": "claude-sonnet-5",
+      "test_executor_agent": "claude-haiku-4-5-20251001",
+      "reviewer_agent": "claude-opus-4-8",
+      "bug_logger_agent": "claude-haiku-4-5-20251001",
+      "orchestrator_agent": "claude-sonnet-5"
+    }
+  },
+  "resource_pools": {
+    "database": {
+      "max_connections": 20,
+      "min_connections": 5
+    },
+    "playwright": {
+      "max_concurrent_browsers": 5
+    }
+  }
+}

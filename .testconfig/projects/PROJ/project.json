@@ -1,0 +1,16 @@
+{
+  "project_key": "PROJ",
+  "project_name": "Main Project",
+  "jira_instance": "https://jira.company.com",
+  "jira_credentials": "env:JIRA_TOKEN",
+  "supported_environments": ["dev", "qa"],
+  "max_concurrent_executions": 1,
+  "webhook_endpoints": [
+    "https://ci.company.com/webhook"
+  ],
+  "teams": {
+    "qa_lead": "john@company.com",
+    "qa_testers": ["jane@company.com"],
+    "developers": ["dev@company.com"]
+  }
+}

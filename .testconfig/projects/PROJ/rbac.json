@@ -1,0 +1,27 @@
+{
+  "roles": {
+    "qa_lead": {
+      "can_run_tests": true,
+      "can_approve_results": true,
+      "can_log_bugs": true,
+      "can_manage_team": true
+    },
+    "qa_tester": {
+      "can_run_tests": true,
+      "can_approve_results": false,
+      "can_log_bugs": true,
+      "can_manage_team": false
+    },
+    "developer": {
+      "can_run_tests": true,
+      "can_approve_results": false,
+      "can_log_bugs": false,
+      "can_manage_team": false
+    }
+  },
+  "team_members": {
+    "john@company.com": "qa_lead",
+    "jane@company.com": "qa_tester",
+    "dev@company.com": "developer"
+  }
+}

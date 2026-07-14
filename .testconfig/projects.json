@@ -1,0 +1,11 @@
+{
+  "projects": [
+    {
+      "project_key": "PROJ",
+      "project_name": "Main Project",
+      "jira_instance": "https://jira.company.com",
+      "app_type": "web",
+      "supported_environments": ["dev", "qa"]
+    }
+  ]
+}

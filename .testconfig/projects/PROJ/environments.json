@@ -1,0 +1,24 @@
+{
+  "qa": {
+    "app_url": "https://qa.app.company.com",
+    "database": {
+      "host": "env:DB_HOST",
+      "port": 5432,
+      "name": "env:DB_NAME",
+      "username": "env:DB_USERNAME",
+      "password": "env:DB_PASSWORD"
+    },
+    "auth_type": "oauth"
+  },
+  "dev": {
+    "app_url": "https://dev.app.company.com",
+    "database": {
+      "host": "localhost",
+      "port": 5432,
+      "name": "test_agent_db",
+      "username": "env:DB_USERNAME",
+      "password": "env:DB_PASSWORD"
+    },
+    "auth_type": "basic"
+  }
+}
